@@ -1,6 +1,6 @@
 from conan import ConanFile
 from conan.tools.build import cross_building
-from conan.tools.cmake import CMake, CMakeToolchain
+from conan.tools.cmake import cmake_layout, CMake, CMakeToolchain
 from conan.tools.files import apply_conandata_patches, copy, download, get, patch, rm
 import os
 
@@ -43,12 +43,14 @@ class ZxcvbnConan(ConanFile):
         sources = self.conan_data["sources"][self.version]
         get(self, **sources["archive"], strip_root=True)
         download(self, filename="CMakeLists.txt", **sources["cmakelists"])
-        # fixes Linux build when "Makefile" is generated but the original "makefile" used
-        rm(self, "makefile", self.source_folder)
+        download(self, filename="dict-generate.cpp", **sources["dict-generate"])
         # for the conditional #include "stdafx.h" in zxcvbn.c
         with open(os.path.join(self.source_folder, "stdafx.h"), "ab") as f:
             f.close()
 
+    def layout(self):
+        cmake_layout(self, build_folder="build")
+        
     def generate(self):
         tc = CMakeToolchain(self)
         tc.generate()
