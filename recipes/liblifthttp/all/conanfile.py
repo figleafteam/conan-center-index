@@ -55,7 +55,7 @@ class LiftHttpConan(ConanFile):
         tc.variables["LIFT_BUILD_TESTS"] = False
         tc.variables["LIFT_USER_LINK_LIBRARIES"] = "CURL::libcurl;uv"
         if self.settings.os in ["Linux", "FreeBSD"]:
-            tc.variables["LIFT_USER_LINK_LIBRARIES"] += ";pthread;dl;stdc++fs"
+            tc.variables["LIFT_USER_LINK_LIBRARIES"] += ";pthread;dl"
         tc.generate()
         
         deps = CMakeDeps(self)
